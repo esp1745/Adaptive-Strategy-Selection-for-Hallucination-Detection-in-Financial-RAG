@@ -1,4 +1,17 @@
+# Python
 venv/
+__pycache__/
 *.pyc
+*.pyo
 .env
-data/raw/*
+
+# macOS
+.DS_Store
+
+# Data (large files)
+data/raw/sec_filings/*.json
+models/financial_rag/embeddings.npy
+
+# IDE
+.vscode/
+.idea/
