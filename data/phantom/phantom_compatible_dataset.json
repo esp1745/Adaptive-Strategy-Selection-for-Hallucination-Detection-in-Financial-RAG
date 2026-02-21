@@ -1,0 +1,611 @@
+{
+  "metadata": {
+    "name": "Financial RAG Hallucination Dataset (PHANTOM-compatible)",
+    "description": "Custom dataset formatted to match PHANTOM benchmark structure",
+    "source": "SEC 10-K filings (2024-2025)",
+    "original_format": "custom",
+    "phantom_compatible": true
+  },
+  "data": [
+    {
+      "id": "custom_1",
+      "question": "What was Apple's total revenue in fiscal year 2025?",
+      "company": "Apple",
+      "document_type": "10-K",
+      "context": null,
+      "grounded": {
+        "response": "Apple's total net sales for fiscal year 2025 were $416.2 billion, which includes iPhone ($209.6B), Mac ($33.7B), iPad ($28.0B), Wearables/Home/Accessories ($35.7B), and Services ($109.2B).",
+        "label": "grounded",
+        "is_hallucinated": false
+      },
+      "hallucinated": {
+        "response": "Apple's total revenue for fiscal year 2025 was $485.3 billion, representing a 22% increase from the previous year.",
+        "label": "hallucinated",
+        "is_hallucinated": true,
+        "hallucination_type": "numerical_fabrication"
+      },
+      "difficulty": "easy",
+      "domain": "revenue"
+    },
+    {
+      "id": "custom_2",
+      "question": "How much revenue did Apple generate from iPhone sales?",
+      "company": "Apple",
+      "document_type": "10-K",
+      "context": null,
+      "grounded": {
+        "response": "Apple generated $209.6 billion in iPhone revenue for fiscal year 2025, compared to $201.2 billion in 2024.",
+        "label": "grounded",
+        "is_hallucinated": false
+      },
+      "hallucinated": {
+        "response": "Apple's iPhone revenue reached $245.8 billion in 2025, making it the first product line to exceed $240 billion.",
+        "label": "hallucinated",
+        "is_hallucinated": true,
+        "hallucination_type": "numerical_fabrication"
+      },
+      "difficulty": "easy",
+      "domain": "revenue"
+    },
+    {
+      "id": "custom_3",
+      "question": "What is Apple's Services business revenue?",
+      "company": "Apple",
+      "document_type": "10-K",
+      "context": null,
+      "grounded": {
+        "response": "Apple's Services segment generated $109.2 billion in revenue for fiscal 2025, up from $96.2 billion in 2024.",
+        "label": "grounded",
+        "is_hallucinated": false
+      },
+      "hallucinated": {
+        "response": "Apple Services revenue was $142.5 billion in 2025, driven primarily by the new Apple AI+ subscription service launched in March 2025.",
+        "label": "hallucinated",
+        "is_hallucinated": true,
+        "hallucination_type": "entity_fabrication"
+      },
+      "difficulty": "medium",
+      "domain": "revenue"
+    },
+    {
+      "id": "custom_4",
+      "question": "What was Tesla's total revenue in 2025?",
+      "company": "Tesla",
+      "document_type": "10-K",
+      "context": null,
+      "grounded": {
+        "response": "Tesla's total revenues for 2025 were approximately $97.7 billion, with automotive revenue being the largest segment.",
+        "label": "grounded",
+        "is_hallucinated": false
+      },
+      "hallucinated": {
+        "response": "Tesla achieved $125.4 billion in total revenue for 2025, surpassing the $120 billion milestone for the first time.",
+        "label": "hallucinated",
+        "is_hallucinated": true,
+        "hallucination_type": "numerical_fabrication"
+      },
+      "difficulty": "easy",
+      "domain": "revenue"
+    },
+    {
+      "id": "custom_5",
+      "question": "How many vehicles did Tesla deliver in 2025?",
+      "company": "Tesla",
+      "document_type": "10-K",
+      "context": null,
+      "grounded": {
+        "response": "Tesla delivered approximately 1.79 million vehicles in 2025, with Model 3 and Model Y comprising the majority of deliveries.",
+        "label": "grounded",
+        "is_hallucinated": false
+      },
+      "hallucinated": {
+        "response": "Tesla delivered 2.4 million vehicles in 2025, exceeding their target of 2.2 million units.",
+        "label": "hallucinated",
+        "is_hallucinated": true,
+        "hallucination_type": "numerical_fabrication"
+      },
+      "difficulty": "easy",
+      "domain": "operations"
+    },
+    {
+      "id": "custom_6",
+      "question": "What is Tesla's energy storage business revenue?",
+      "company": "Tesla",
+      "document_type": "10-K",
+      "context": null,
+      "grounded": {
+        "response": "Tesla's Energy Generation and Storage segment generated significant revenue in 2025, contributing to the company's diversification beyond automotive.",
+        "label": "grounded",
+        "is_hallucinated": false
+      },
+      "hallucinated": {
+        "response": "Tesla's energy storage division generated $18.7 billion in 2025, with the Megapack factory in Shanghai producing 500 GWh annually.",
+        "label": "hallucinated",
+        "is_hallucinated": true,
+        "hallucination_type": "numerical_fabrication"
+      },
+      "difficulty": "medium",
+      "domain": "revenue"
+    },
+    {
+      "id": "custom_7",
+      "question": "What are Tesla's main risk factors?",
+      "company": "Tesla",
+      "document_type": "10-K",
+      "context": null,
+      "grounded": {
+        "response": "Tesla's risk factors include competition in the electric vehicle market, dependency on key personnel, supply chain disruptions, regulatory changes, and the ability to scale production.",
+        "label": "grounded",
+        "is_hallucinated": false
+      },
+      "hallucinated": {
+        "response": "Tesla's primary risk factor is the pending SEC investigation into autonomous driving claims, which could result in fines up to $5 billion.",
+        "label": "hallucinated",
+        "is_hallucinated": true,
+        "hallucination_type": "entity_fabrication"
+      },
+      "difficulty": "hard",
+      "domain": "risk"
+    },
+    {
+      "id": "custom_8",
+      "question": "What was Microsoft's total revenue in fiscal 2025?",
+      "company": "Microsoft",
+      "document_type": "10-K",
+      "context": null,
+      "grounded": {
+        "response": "Microsoft's total revenue for fiscal year 2025 was $281.7 billion, compared to $245.1 billion in fiscal 2024.",
+        "label": "grounded",
+        "is_hallucinated": false
+      },
+      "hallucinated": {
+        "response": "Microsoft reported total revenue of $312.5 billion for fiscal 2025, making it the world's highest-revenue technology company.",
+        "label": "hallucinated",
+        "is_hallucinated": true,
+        "hallucination_type": "numerical_fabrication"
+      },
+      "difficulty": "easy",
+      "domain": "revenue"
+    },
+    {
+      "id": "custom_9",
+      "question": "How is Microsoft's Azure cloud business performing?",
+      "company": "Microsoft",
+      "document_type": "10-K",
+      "context": null,
+      "grounded": {
+        "response": "Microsoft Azure continues to show strong growth as part of the Intelligent Cloud segment. Azure and other cloud services revenue grew significantly year-over-year.",
+        "label": "grounded",
+        "is_hallucinated": false
+      },
+      "hallucinated": {
+        "response": "Microsoft Azure captured 42% of the global cloud market in 2025, overtaking AWS for the first time with $89 billion in annual revenue.",
+        "label": "hallucinated",
+        "is_hallucinated": true,
+        "hallucination_type": "numerical_fabrication"
+      },
+      "difficulty": "medium",
+      "domain": "cloud"
+    },
+    {
+      "id": "custom_10",
+      "question": "What is Microsoft's operating income?",
+      "company": "Microsoft",
+      "document_type": "10-K",
+      "context": null,
+      "grounded": {
+        "response": "Microsoft's operating income for fiscal 2025 was approximately $123.2 billion, reflecting strong performance across all segments.",
+        "label": "grounded",
+        "is_hallucinated": false
+      },
+      "hallucinated": {
+        "response": "Microsoft's operating income reached $156.8 billion in fiscal 2025, with AI services contributing $28 billion.",
+        "label": "hallucinated",
+        "is_hallucinated": true,
+        "hallucination_type": "numerical_fabrication"
+      },
+      "difficulty": "medium",
+      "domain": "profitability"
+    },
+    {
+      "id": "custom_11",
+      "question": "What was Amazon's total revenue in 2025?",
+      "company": "Amazon",
+      "document_type": "10-K",
+      "context": null,
+      "grounded": {
+        "response": "Amazon's total net sales for 2025 were approximately $700 billion, with growth across North America, International, and AWS segments.",
+        "label": "grounded",
+        "is_hallucinated": false
+      },
+      "hallucinated": {
+        "response": "Amazon's total revenue for 2025 was $825 billion, driven by the acquisition of Target Corporation in Q2 2025.",
+        "label": "hallucinated",
+        "is_hallucinated": true,
+        "hallucination_type": "entity_fabrication"
+      },
+      "difficulty": "hard",
+      "domain": "revenue"
+    },
+    {
+      "id": "custom_12",
+      "question": "How much revenue does AWS generate?",
+      "company": "Amazon",
+      "document_type": "10-K",
+      "context": null,
+      "grounded": {
+        "response": "AWS (Amazon Web Services) generated significant revenue as Amazon's most profitable segment, with continued growth in cloud computing services.",
+        "label": "grounded",
+        "is_hallucinated": false
+      },
+      "hallucinated": {
+        "response": "AWS revenue was $142 billion in 2025, representing 95% of Amazon's total operating income.",
+        "label": "hallucinated",
+        "is_hallucinated": true,
+        "hallucination_type": "numerical_fabrication"
+      },
+      "difficulty": "medium",
+      "domain": "cloud"
+    },
+    {
+      "id": "custom_13",
+      "question": "What was Amazon's net income in 2025?",
+      "company": "Amazon",
+      "document_type": "10-K",
+      "context": null,
+      "grounded": {
+        "response": "Amazon's net income for 2025 was $77.7 billion, a significant increase from $59.2 billion in 2024.",
+        "label": "grounded",
+        "is_hallucinated": false
+      },
+      "hallucinated": {
+        "response": "Amazon reported net income of $45.2 billion in 2025, down 15% due to increased AI infrastructure investments.",
+        "label": "hallucinated",
+        "is_hallucinated": true,
+        "hallucination_type": "numerical_fabrication"
+      },
+      "difficulty": "easy",
+      "domain": "profitability"
+    },
+    {
+      "id": "custom_14",
+      "question": "What is Amazon's North America segment revenue?",
+      "company": "Amazon",
+      "document_type": "10-K",
+      "context": null,
+      "grounded": {
+        "response": "Amazon's North America segment continues to be its largest geographic segment by revenue, encompassing retail sales, subscription services, and advertising.",
+        "label": "grounded",
+        "is_hallucinated": false
+      },
+      "hallucinated": {
+        "response": "Amazon North America revenue was $485 billion in 2025, with 60% coming from the new Amazon Healthcare division.",
+        "label": "hallucinated",
+        "is_hallucinated": true,
+        "hallucination_type": "entity_fabrication"
+      },
+      "difficulty": "hard",
+      "domain": "revenue"
+    },
+    {
+      "id": "custom_15",
+      "question": "What was Alphabet's total revenue in 2025?",
+      "company": "Google",
+      "document_type": "10-K",
+      "context": null,
+      "grounded": {
+        "response": "Alphabet's total revenues for 2025 were approximately $380-400 billion, with Google Services (including Search and YouTube) being the largest contributor.",
+        "label": "grounded",
+        "is_hallucinated": false
+      },
+      "hallucinated": {
+        "response": "Alphabet reported $452 billion in total revenue for 2025, becoming the first company to generate $450 billion annually.",
+        "label": "hallucinated",
+        "is_hallucinated": true,
+        "hallucination_type": "numerical_fabrication"
+      },
+      "difficulty": "easy",
+      "domain": "revenue"
+    },
+    {
+      "id": "custom_16",
+      "question": "How much revenue does Google generate from advertising?",
+      "company": "Google",
+      "document_type": "10-K",
+      "context": null,
+      "grounded": {
+        "response": "Google's advertising revenue, including Search, YouTube ads, and Google Network, represents the majority of Alphabet's total revenue.",
+        "label": "grounded",
+        "is_hallucinated": false
+      },
+      "hallucinated": {
+        "response": "Google advertising revenue declined to $180 billion in 2025, a 12% drop due to AI chatbots reducing search traffic by 30%.",
+        "label": "hallucinated",
+        "is_hallucinated": true,
+        "hallucination_type": "trend_fabrication"
+      },
+      "difficulty": "hard",
+      "domain": "advertising"
+    },
+    {
+      "id": "custom_17",
+      "question": "What is Google Cloud's revenue and growth?",
+      "company": "Google",
+      "document_type": "10-K",
+      "context": null,
+      "grounded": {
+        "response": "Google Cloud revenue showed continued growth in 2025, with increasing adoption of cloud services and AI/ML capabilities.",
+        "label": "grounded",
+        "is_hallucinated": false
+      },
+      "hallucinated": {
+        "response": "Google Cloud revenue reached $65 billion in 2025, with a 58% year-over-year growth rate, the highest among major cloud providers.",
+        "label": "hallucinated",
+        "is_hallucinated": true,
+        "hallucination_type": "numerical_fabrication"
+      },
+      "difficulty": "medium",
+      "domain": "cloud"
+    },
+    {
+      "id": "custom_18",
+      "question": "What is YouTube's advertising revenue?",
+      "company": "Google",
+      "document_type": "10-K",
+      "context": null,
+      "grounded": {
+        "response": "YouTube ads revenue is a significant contributor to Google Services, generating billions in advertising revenue annually.",
+        "label": "grounded",
+        "is_hallucinated": false
+      },
+      "hallucinated": {
+        "response": "YouTube advertising revenue was $52 billion in 2025, surpassing Netflix's total revenue for the first time.",
+        "label": "hallucinated",
+        "is_hallucinated": true,
+        "hallucination_type": "comparison_fabrication"
+      },
+      "difficulty": "medium",
+      "domain": "advertising"
+    },
+    {
+      "id": "custom_19",
+      "question": "What are Apple's main business segments?",
+      "company": "Apple",
+      "document_type": "10-K",
+      "context": null,
+      "grounded": {
+        "response": "Apple operates through five main product and service categories: iPhone, Mac, iPad, Wearables/Home/Accessories, and Services (including App Store, Apple Music, iCloud, Apple TV+).",
+        "label": "grounded",
+        "is_hallucinated": false
+      },
+      "hallucinated": {
+        "response": "Apple has six business segments: iPhone, Mac, iPad, Wearables, Services, and Apple Automotive (launched in 2025 with the Apple Car).",
+        "label": "hallucinated",
+        "is_hallucinated": true,
+        "hallucination_type": "entity_fabrication"
+      },
+      "difficulty": "medium",
+      "domain": "operations"
+    },
+    {
+      "id": "custom_20",
+      "question": "What is Tesla's gross margin on automotive sales?",
+      "company": "Tesla",
+      "document_type": "10-K",
+      "context": null,
+      "grounded": {
+        "response": "Tesla's automotive gross margin has varied throughout the year, impacted by pricing adjustments and production costs.",
+        "label": "grounded",
+        "is_hallucinated": false
+      },
+      "hallucinated": {
+        "response": "Tesla's automotive gross margin was 32.5% in 2025, the highest in company history due to the new 4680 battery cost savings.",
+        "label": "hallucinated",
+        "is_hallucinated": true,
+        "hallucination_type": "numerical_fabrication"
+      },
+      "difficulty": "medium",
+      "domain": "profitability"
+    },
+    {
+      "id": "custom_21",
+      "question": "What is Microsoft's gaming revenue from Xbox?",
+      "company": "Microsoft",
+      "document_type": "10-K",
+      "context": null,
+      "grounded": {
+        "response": "Microsoft's gaming revenue, including Xbox hardware, content and services, and Game Pass subscriptions, is reported as part of the More Personal Computing segment.",
+        "label": "grounded",
+        "is_hallucinated": false
+      },
+      "hallucinated": {
+        "response": "Xbox and gaming revenue was $28.5 billion in FY2025, with Game Pass reaching 45 million subscribers.",
+        "label": "hallucinated",
+        "is_hallucinated": true,
+        "hallucination_type": "numerical_fabrication"
+      },
+      "difficulty": "medium",
+      "domain": "gaming"
+    },
+    {
+      "id": "custom_22",
+      "question": "How many employees does Amazon have?",
+      "company": "Amazon",
+      "document_type": "10-K",
+      "context": null,
+      "grounded": {
+        "response": "Amazon employs over 1.5 million people globally, making it one of the largest private employers in the world.",
+        "label": "grounded",
+        "is_hallucinated": false
+      },
+      "hallucinated": {
+        "response": "Amazon reduced its workforce to 980,000 employees in 2025 after automating 40% of warehouse operations with robots.",
+        "label": "hallucinated",
+        "is_hallucinated": true,
+        "hallucination_type": "numerical_fabrication"
+      },
+      "difficulty": "hard",
+      "domain": "operations"
+    },
+    {
+      "id": "custom_23",
+      "question": "What percentage of Google's revenue comes from Search?",
+      "company": "Google",
+      "document_type": "10-K",
+      "context": null,
+      "grounded": {
+        "response": "Google Search and related advertising represents the largest portion of Google Services revenue and Alphabet's overall revenue.",
+        "label": "grounded",
+        "is_hallucinated": false
+      },
+      "hallucinated": {
+        "response": "Google Search now represents only 45% of total revenue, down from 58% in 2024, as YouTube and Cloud have grown faster.",
+        "label": "hallucinated",
+        "is_hallucinated": true,
+        "hallucination_type": "trend_fabrication"
+      },
+      "difficulty": "hard",
+      "domain": "advertising"
+    },
+    {
+      "id": "custom_24",
+      "question": "What are Microsoft's key risk factors?",
+      "company": "Microsoft",
+      "document_type": "10-K",
+      "context": null,
+      "grounded": {
+        "response": "Microsoft's risk factors include intense competition, cybersecurity threats, regulatory scrutiny, rapid technological change, and dependence on attracting and retaining skilled employees.",
+        "label": "grounded",
+        "is_hallucinated": false
+      },
+      "hallucinated": {
+        "response": "Microsoft's main risk factor is the ongoing FTC antitrust lawsuit seeking to break up the company's cloud and productivity divisions.",
+        "label": "hallucinated",
+        "is_hallucinated": true,
+        "hallucination_type": "entity_fabrication"
+      },
+      "difficulty": "hard",
+      "domain": "risk"
+    },
+    {
+      "id": "custom_25",
+      "question": "What is Amazon's strategy for physical retail?",
+      "company": "Amazon",
+      "document_type": "10-K",
+      "context": null,
+      "grounded": {
+        "response": "Amazon operates physical retail stores including Whole Foods Market, Amazon Fresh, and Amazon Go stores as part of its omnichannel retail strategy.",
+        "label": "grounded",
+        "is_hallucinated": false
+      },
+      "hallucinated": {
+        "response": "Amazon announced plans to close all physical retail locations by 2027, focusing exclusively on e-commerce and AWS.",
+        "label": "hallucinated",
+        "is_hallucinated": true,
+        "hallucination_type": "event_fabrication"
+      },
+      "difficulty": "hard",
+      "domain": "strategy"
+    },
+    {
+      "id": "custom_26",
+      "question": "What is Apple's cash position?",
+      "company": "Apple",
+      "document_type": "10-K",
+      "context": null,
+      "grounded": {
+        "response": "Apple maintains a strong cash and marketable securities position, with total cash and investments exceeding $100 billion.",
+        "label": "grounded",
+        "is_hallucinated": false
+      },
+      "hallucinated": {
+        "response": "Apple's cash reserves dropped to $45 billion in 2025 after a $80 billion special dividend payment.",
+        "label": "hallucinated",
+        "is_hallucinated": true,
+        "hallucination_type": "event_fabrication"
+      },
+      "difficulty": "hard",
+      "domain": "financial_position"
+    },
+    {
+      "id": "custom_27",
+      "question": "What was Tesla's R&D spending in 2025?",
+      "company": "Tesla",
+      "document_type": "10-K",
+      "context": null,
+      "grounded": {
+        "response": "Tesla continues to invest significantly in research and development for vehicle technology, battery development, and autonomous driving capabilities.",
+        "label": "grounded",
+        "is_hallucinated": false
+      },
+      "hallucinated": {
+        "response": "Tesla R&D spending was $12.8 billion in 2025, with $5.2 billion allocated to the humanoid robot Optimus program.",
+        "label": "hallucinated",
+        "is_hallucinated": true,
+        "hallucination_type": "numerical_fabrication"
+      },
+      "difficulty": "medium",
+      "domain": "operations"
+    },
+    {
+      "id": "custom_28",
+      "question": "What is Google's operating margin?",
+      "company": "Google",
+      "document_type": "10-K",
+      "context": null,
+      "grounded": {
+        "response": "Alphabet maintains healthy operating margins, with profitability driven primarily by the Google Services segment.",
+        "label": "grounded",
+        "is_hallucinated": false
+      },
+      "hallucinated": {
+        "response": "Google's operating margin fell to 18% in 2025, the lowest since 2015, due to AI infrastructure costs.",
+        "label": "hallucinated",
+        "is_hallucinated": true,
+        "hallucination_type": "trend_fabrication"
+      },
+      "difficulty": "hard",
+      "domain": "profitability"
+    },
+    {
+      "id": "custom_29",
+      "question": "What is Microsoft's dividend yield?",
+      "company": "Microsoft",
+      "document_type": "10-K",
+      "context": null,
+      "grounded": {
+        "response": "Microsoft pays regular quarterly dividends to shareholders and has a history of dividend increases.",
+        "label": "grounded",
+        "is_hallucinated": false
+      },
+      "hallucinated": {
+        "response": "Microsoft increased its dividend by 25% in 2025, resulting in an annual dividend of $4.80 per share and a yield of 1.8%.",
+        "label": "hallucinated",
+        "is_hallucinated": true,
+        "hallucination_type": "numerical_fabrication"
+      },
+      "difficulty": "medium",
+      "domain": "shareholder_returns"
+    },
+    {
+      "id": "custom_30",
+      "question": "What is Amazon's free cash flow?",
+      "company": "Amazon",
+      "document_type": "10-K",
+      "context": null,
+      "grounded": {
+        "response": "Amazon generated positive free cash flow in 2025, supported by strong operating cash flow from all business segments.",
+        "label": "grounded",
+        "is_hallucinated": false
+      },
+      "hallucinated": {
+        "response": "Amazon's free cash flow was negative $12 billion in 2025 due to $45 billion in AI data center construction.",
+        "label": "hallucinated",
+        "is_hallucinated": true,
+        "hallucination_type": "numerical_fabrication"
+      },
+      "difficulty": "hard",
+      "domain": "financial_position"
+    }
+  ]
+}

@@ -61,10 +61,87 @@ class BenchmarkMetrics:
         }
 
 
-def load_test_dataset(path: str = 'data/processed/hallucination_test_dataset.json') -> Dict:
-    """Load the test dataset"""
-    with open(path, 'r') as f:
-        return json.load(f)
+def load_test_dataset(path: str = None, use_phantom: bool = False, limit: int = None) -> Dict:
+    """
+    Load the test dataset.
+    
+    Args:
+        path: Custom path to dataset
+        use_phantom: If True, load real PHANTOM dataset from HuggingFace
+        limit: Maximum number of examples to load (useful for large datasets)
+    """
+    if use_phantom:
+        # Try loading from HuggingFace first
+        try:
+            from datasets import load_dataset
+            print("Loading PHANTOM dataset from HuggingFace (seyled/Phantom_Hallucination_Detection)...")
+            phantom = load_dataset('seyled/Phantom_Hallucination_Detection',
+                                   data_files='PhantomDataset/Phantom_10k_seed.csv')
+            df = phantom['train'].to_pandas()
+            
+            # Apply limit
+            if limit:
+                df = df.head(limit)
+                print(f"  Limited to {limit} examples")
+            
+            print(f"  Loaded {len(df)} examples from PHANTOM")
+            
+            # Convert PHANTOM format (query, context, answer, ground_truth_label)
+            examples = []
+            for idx, row in df.iterrows():
+                is_hallucination = row['ground_truth_label'] == 'hallucination'
+                examples.append({
+                    'id': f"phantom_{idx}",
+                    'question': row['query'],
+                    'context': row['context'],  # PHANTOM provides context directly
+                    'response': row['answer'],
+                    'is_hallucinated': is_hallucination,
+                    'domain': 'financial'
+                })
+            
+            return {
+                'metadata': {'name': 'PHANTOM 10-K Seed', 'source': 'HuggingFace'},
+                'examples': examples,
+                'format': 'phantom'  # Flag to handle differently in benchmark
+            }
+        except Exception as e:
+            print(f"  Warning: Could not load from HuggingFace: {e}")
+            print("  Falling back to local phantom_compatible_dataset.json")
+            
+        # Fallback to local file
+        phantom_path = 'data/phantom/phantom_compatible_dataset.json'
+        if Path(phantom_path).exists():
+            print("Loading local PHANTOM-compatible dataset...")
+            with open(phantom_path, 'r') as f:
+                phantom_data = json.load(f)
+            examples = [
+                {
+                    'id': entry['id'],
+                    'question': entry['question'],
+                    'company': entry['company'],
+                    'domain': entry.get('domain', 'financial'),
+                    'grounded_response': entry['grounded']['response'],
+                    'hallucinated_response': entry['hallucinated']['response'],
+                    'hallucination_type': entry['hallucinated'].get('hallucination_type'),
+                    'difficulty': entry.get('difficulty')
+                }
+                for entry in phantom_data.get('data', [])
+            ]
+            if limit:
+                examples = examples[:limit]
+            return {
+                'metadata': phantom_data.get('metadata', {}),
+                'examples': examples
+            }
+    
+    dataset_path = path or 'data/processed/hallucination_test_dataset.json'
+    with open(dataset_path, 'r') as f:
+        data = json.load(f)
+    
+    if limit and 'examples' in data:
+        data['examples'] = data['examples'][:limit]
+    
+    return data
 
 
 def calculate_metrics(
@@ -110,23 +187,21 @@ def benchmark_detector(
     latencies = []
     
     examples = dataset['examples']
+    is_phantom_format = dataset.get('format') == 'phantom'
     
     for i, example in enumerate(examples):
         question = example['question']
-        company = example['company']
         
-        # Get context from RAG
-        results = rag.retrieve(question, k=3)
-        context = [r['text'] for r in results if r['company'] == company]
-        
-        if not context:
-            # Use any top results if company-specific context not found
-            context = [r['text'] for r in results[:3]]
-        
-        # Test both grounded and hallucinated responses
-        for response_type in ['grounded', 'hallucinated']:
-            response = example[f'{response_type}_response']
-            true_label = (response_type == 'hallucinated')
+        # Handle PHANTOM format (single response with label)
+        if is_phantom_format:
+            response = example['response']
+            true_label = example['is_hallucinated']
+            # PHANTOM provides context directly
+            context = [example['context']] if example.get('context') else []
+            
+            if not context:
+                results = rag.retrieve(question, k=3)
+                context = [r['text'] for r in results[:3]]
             
             try:
                 start = time.time()
@@ -137,16 +212,53 @@ def benchmark_detector(
                 labels.append(true_label)
                 latencies.append(latency)
                 
-                if verbose and i < 3:  # Show first few examples
+                if verbose and i < 5:
                     status = "[OK]" if result.is_hallucinated == true_label else "[X]"
-                    print(f"  {status} Q{example['id']} ({response_type}): "
+                    label_str = "hallucinated" if true_label else "grounded"
+                    print(f"  {status} {example['id']} ({label_str}): "
                           f"pred={result.is_hallucinated}, "
                           f"conf={result.confidence:.2f}, "
                           f"latency={latency:.1f}ms")
-                    
             except Exception as e:
-                print(f"  ERROR on example {example['id']}: {e}")
+                if verbose:
+                    print(f"  ERROR on example {example['id']}: {e}")
                 continue
+        else:
+            # Original format with grounded/hallucinated pairs
+            company = example.get('company', '')
+            
+            # Get context from RAG
+            results = rag.retrieve(question, k=3)
+            context = [r['text'] for r in results if r.get('company') == company]
+            
+            if not context:
+                context = [r['text'] for r in results[:3]]
+            
+            for response_type in ['grounded', 'hallucinated']:
+                response = example.get(f'{response_type}_response')
+                if not response:
+                    continue
+                true_label = (response_type == 'hallucinated')
+                
+                try:
+                    start = time.time()
+                    result = detector.detect(question, response, context)
+                    latency = (time.time() - start) * 1000
+                    
+                    predictions.append(result.is_hallucinated)
+                    labels.append(true_label)
+                    latencies.append(latency)
+                    
+                    if verbose and i < 3:
+                        status = "[OK]" if result.is_hallucinated == true_label else "[X]"
+                        print(f"  {status} Q{example['id']} ({response_type}): "
+                              f"pred={result.is_hallucinated}, "
+                              f"conf={result.confidence:.2f}, "
+                              f"latency={latency:.1f}ms")
+                except Exception as e:
+                    if verbose:
+                        print(f"  ERROR on example {example['id']}: {e}")
+                    continue
     
     # Calculate metrics
     if not predictions:
@@ -185,12 +297,16 @@ def benchmark_detector(
 
 def run_full_benchmark(
     detectors: List[str] = None,
-    verbose: bool = True
+    verbose: bool = True,
+    use_phantom: bool = False,
+    limit: int = None
 ) -> Dict[str, BenchmarkMetrics]:
     """Run benchmark on all (or specified) detectors"""
     
     print("\n" + "="*70)
     print("HALLUCINATION DETECTION BENCHMARK")
+    if use_phantom:
+        print("Dataset: PHANTOM (NeurIPS 2024 - Financial Hallucination Detection)")
     print("="*70)
     
     # Load RAG
@@ -201,7 +317,7 @@ def run_full_benchmark(
     
     # Load dataset
     print("\nLoading test dataset...")
-    dataset = load_test_dataset()
+    dataset = load_test_dataset(use_phantom=use_phantom, limit=limit)
     print(f"  Loaded {len(dataset['examples'])} examples")
     
     # Available detectors
@@ -303,6 +419,10 @@ if __name__ == "__main__":
     parser.add_argument('--quick', action='store_true', help='Run quick test only')
     parser.add_argument('--detectors', nargs='+', help='Specific detectors to benchmark')
     parser.add_argument('--quiet', action='store_true', help='Less verbose output')
+    parser.add_argument('--phantom', action='store_true', 
+                        help='Use PHANTOM dataset (NeurIPS 2024 financial hallucination benchmark)')
+    parser.add_argument('--limit', type=int, default=None,
+                        help='Limit number of examples (useful for large datasets like PHANTOM)')
     
     args = parser.parse_args()
     
@@ -311,4 +431,5 @@ if __name__ == "__main__":
     else:
         # Run benchmark with fast detectors only by default (skip BERT which is slow to load)
         detectors = args.detectors or ['semantic_similarity', 'token_overlap', 'llm_judge']
-        run_full_benchmark(detectors=detectors, verbose=not args.quiet)
+        run_full_benchmark(detectors=detectors, verbose=not args.quiet, 
+                          use_phantom=args.phantom, limit=args.limit)

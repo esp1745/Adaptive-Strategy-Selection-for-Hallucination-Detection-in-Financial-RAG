@@ -72,7 +72,8 @@ DEFAULT_CONFIGS = {
         'aggregation': 'max_contradiction'
     },
     'llm_judge': {
-        'backend': 'mock',  # Use mock by default (no API key needed)
+        'backend': 'ollama',  # Use local Ollama with Qwen2.5-7B
+        'model': 'qwen2.5:7b',
         'threshold': 0.5
     }
 }
