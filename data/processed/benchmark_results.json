@@ -1,50 +1,50 @@
 {
   "token_overlap": {
     "name": "token_overlap",
-    "accuracy": 0.5,
-    "precision": 0,
-    "recall": 0.0,
-    "f1": 0,
-    "avg_latency_ms": 3.24,
-    "total_time_s": 0.16,
+    "accuracy": 0.7,
+    "precision": 0.6429,
+    "recall": 0.9,
+    "f1": 0.75,
+    "avg_latency_ms": 3.42,
+    "total_time_s": 0.34,
     "cost": 0.05,
     "confusion_matrix": {
-      "tp": 0,
-      "fp": 0,
+      "tp": 45,
+      "fp": 25,
       "tn": 25,
-      "fn": 25
+      "fn": 5
     }
   },
   "semantic_similarity": {
     "name": "semantic_similarity",
-    "accuracy": 0.4,
-    "precision": 0.4074,
-    "recall": 0.44,
-    "f1": 0.4231,
-    "avg_latency_ms": 132.57,
-    "total_time_s": 6.63,
+    "accuracy": 0.37,
+    "precision": 0.303,
+    "recall": 0.2,
+    "f1": 0.241,
+    "avg_latency_ms": 46.77,
+    "total_time_s": 4.68,
     "cost": 0.1,
     "confusion_matrix": {
-      "tp": 11,
-      "fp": 16,
-      "tn": 9,
-      "fn": 14
+      "tp": 10,
+      "fp": 23,
+      "tn": 27,
+      "fn": 40
     }
   },
   "bert_nli": {
     "name": "bert_nli",
-    "accuracy": 0.58,
-    "precision": 0.5833,
-    "recall": 0.56,
-    "f1": 0.5714,
-    "avg_latency_ms": 1772.64,
-    "total_time_s": 88.63,
+    "accuracy": 0.56,
+    "precision": 0.5625,
+    "recall": 0.54,
+    "f1": 0.551,
+    "avg_latency_ms": 918.55,
+    "total_time_s": 91.85,
     "cost": 0.3,
     "confusion_matrix": {
-      "tp": 14,
-      "fp": 10,
-      "tn": 15,
-      "fn": 11
+      "tp": 27,
+      "fp": 21,
+      "tn": 29,
+      "fn": 23
     }
   }
 }

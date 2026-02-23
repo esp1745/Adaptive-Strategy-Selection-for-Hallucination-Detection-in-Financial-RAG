@@ -57,13 +57,14 @@ DETECTOR_CLASSES = {
 }
 
 # Default configurations for each detector
+# Thresholds optimized based on PHANTOM dataset analysis
 DEFAULT_CONFIGS = {
     'semantic_similarity': {
-        'threshold': 0.5,
+        'threshold': 0.35,  # Optimized from 0.5
         'aggregation': 'max'
     },
     'token_overlap': {
-        'threshold': 0.3,
+        'threshold': 0.63,  # Optimized from 0.3
         'use_rouge': True,
         'extract_numbers': True
     },

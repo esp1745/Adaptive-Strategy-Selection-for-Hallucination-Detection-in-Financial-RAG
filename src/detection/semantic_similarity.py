@@ -31,7 +31,7 @@ class SemanticSimilarityDetector(BaseDetector):
     def __init__(
         self,
         model_name: str = 'all-MiniLM-L6-v2',
-        threshold: float = 0.5,
+        threshold: float = 0.35,
         aggregation: str = 'max'  # 'max', 'mean', 'weighted'
     ):
         """

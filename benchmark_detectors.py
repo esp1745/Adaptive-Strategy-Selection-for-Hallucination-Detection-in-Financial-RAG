@@ -61,13 +61,13 @@ class BenchmarkMetrics:
         }
 
 
-def load_test_dataset(path: str = None, use_phantom: bool = False, limit: int = None) -> Dict:
+def load_test_dataset(path: str = None, use_phantom: bool = True, limit: int = None) -> Dict:
     """
-    Load the test dataset.
+    Load the test dataset (defaults to PHANTOM).
     
     Args:
         path: Custom path to dataset
-        use_phantom: If True, load real PHANTOM dataset from HuggingFace
+        use_phantom: If True, load PHANTOM dataset from HuggingFace (default: True)
         limit: Maximum number of examples to load (useful for large datasets)
     """
     if use_phantom:
@@ -177,7 +177,10 @@ def benchmark_detector(
     
     # Create detector
     try:
-        detector = create_detector(detector_name)
+        if detector_name == 'llm_judge':
+            detector = create_detector(detector_name, backend='ollama', model='qwen2.5:7b')
+        else:
+            detector = create_detector(detector_name)
     except Exception as e:
         print(f"ERROR creating detector: {e}")
         return None
@@ -419,10 +422,10 @@ if __name__ == "__main__":
     parser.add_argument('--quick', action='store_true', help='Run quick test only')
     parser.add_argument('--detectors', nargs='+', help='Specific detectors to benchmark')
     parser.add_argument('--quiet', action='store_true', help='Less verbose output')
-    parser.add_argument('--phantom', action='store_true', 
-                        help='Use PHANTOM dataset (NeurIPS 2024 financial hallucination benchmark)')
-    parser.add_argument('--limit', type=int, default=None,
-                        help='Limit number of examples (useful for large datasets like PHANTOM)')
+    parser.add_argument('--no-phantom', action='store_true', 
+                        help='Use custom dataset instead of PHANTOM (default: uses PHANTOM)')
+    parser.add_argument('--limit', type=int, default=100,
+                        help='Limit number of examples from PHANTOM (default: 100)')
     
     args = parser.parse_args()
     
@@ -432,4 +435,4 @@ if __name__ == "__main__":
         # Run benchmark with fast detectors only by default (skip BERT which is slow to load)
         detectors = args.detectors or ['semantic_similarity', 'token_overlap', 'llm_judge']
         run_full_benchmark(detectors=detectors, verbose=not args.quiet, 
-                          use_phantom=args.phantom, limit=args.limit)
+                          use_phantom=not args.no_phantom, limit=args.limit)

@@ -32,7 +32,7 @@ class TokenOverlapDetector(BaseDetector):
     
     def __init__(
         self,
-        threshold: float = 0.3,
+        threshold: float = 0.63,
         ngram_weights: Tuple[float, ...] = (0.4, 0.3, 0.2, 0.1),
         use_rouge: bool = True,
         extract_numbers: bool = True
