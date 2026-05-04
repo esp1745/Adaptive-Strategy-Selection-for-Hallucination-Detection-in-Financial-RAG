@@ -262,10 +262,13 @@ def select_answer_sentences(question: str, chunks: List[Dict]) -> List[str]:
         and token != (company_hint or "").lower()
         and not token.isdigit()
     }
-    scored_sentences: List[Tuple[float, str]] = []
+    # scored_sentences: (score, sentence, chunk_rank)
+    scored_sentences: List[Tuple[float, str, int]] = []
 
     for rank, chunk in enumerate(chunks):
-        base_score = 1.0 - 0.12 * rank + float(chunk.get("score", 0.0))
+        # Use only rank-based priority, not the chunk retrieval score, so
+        # sentence-level relevance signals are not swamped by retrieval scores.
+        base_score = 1.0 - 0.12 * rank
         for sentence in split_sentences(chunk.get("text", "")):
             sentence_tokens = signal_tokens(sentence)
             overlap = len(question_tokens & sentence_tokens) / max(1, len(question_tokens))
@@ -277,20 +280,55 @@ def select_answer_sentences(question: str, chunks: List[Dict]) -> List[str]:
             score = base_score + overlap + 0.45 * focus_hits + number_bonus + company_bonus - length_penalty
             if focus_terms and focus_hits == 0:
                 score -= 0.2
-            scored_sentences.append((score, sentence.strip()))
+            scored_sentences.append((score, sentence.strip(), rank))
 
     scored_sentences.sort(key=lambda pair: pair[0], reverse=True)
-    selected: List[str] = []
-    seen = set()
-    for _, sentence in scored_sentences:
+
+    # Pick best sentence that has at least some relevance (overlap or focus hit).
+    best_sentence: str | None = None
+    best_rank: int = 0
+    seen: set[str] = set()
+    for score, sentence, rank in scored_sentences:
         normalized = sentence.lower()
         if normalized in seen:
             continue
-        selected.append(sentence)
+        # Require at least a minimal relevance signal; skip pure noise sentences.
+        sentence_tokens = signal_tokens(sentence)
+        overlap = len(question_tokens & sentence_tokens) / max(1, len(question_tokens))
+        focus_hits = len(focus_terms & sentence_tokens) / max(1, len(focus_terms))
+        if focus_terms and overlap == 0 and focus_hits == 0:
+            continue
+        best_sentence = sentence
+        best_rank = rank
         seen.add(normalized)
-        if len(selected) == 2:
-            break
-    return selected
+        break
+
+    if best_sentence is None:
+        # Nothing passed the relevance gate — fall back to top-scored sentence
+        for _, sentence, rank in scored_sentences:
+            normalized = sentence.lower()
+            if normalized not in seen:
+                best_sentence = sentence
+                best_rank = rank
+                seen.add(normalized)
+                break
+
+    if best_sentence is None:
+        return []
+
+    # Pick a second sentence from the SAME chunk to ensure coherence.
+    second_sentence: str | None = None
+    for score, sentence, rank in scored_sentences:
+        normalized = sentence.lower()
+        if normalized in seen:
+            continue
+        if rank != best_rank:
+            continue
+        second_sentence = sentence
+        seen.add(normalized)
+        break
+
+    return [best_sentence, second_sentence] if second_sentence else [best_sentence]
 
 
 def generate_answer(question: str, chunks: List[Dict], retrieval_stats: Dict[str, float]) -> Dict:
