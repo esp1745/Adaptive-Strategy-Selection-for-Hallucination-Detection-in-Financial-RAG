@@ -71,7 +71,32 @@ def load_test_dataset(path: str = None, use_phantom: bool = True, limit: int = N
         limit: Maximum number of examples to load (useful for large datasets)
     """
     if use_phantom:
-        # Try loading from HuggingFace first
+        phantom_path = Path("data/phantom/phantom_compatible_dataset.json")
+        if phantom_path.exists():
+            print("Loading local PHANTOM-compatible dataset...")
+            with phantom_path.open("r", encoding="utf-8") as f:
+                phantom_data = json.load(f)
+            examples = [
+                {
+                    'id': entry['id'],
+                    'question': entry['question'],
+                    'company': entry['company'],
+                    'domain': entry.get('domain', 'financial'),
+                    'grounded_response': entry['grounded']['response'],
+                    'hallucinated_response': entry['hallucinated']['response'],
+                    'hallucination_type': entry['hallucinated'].get('hallucination_type'),
+                    'difficulty': entry.get('difficulty')
+                }
+                for entry in phantom_data.get('data', [])
+            ]
+            if limit:
+                examples = examples[:limit]
+            return {
+                'metadata': phantom_data.get('metadata', {}),
+                'examples': examples
+            }
+
+        # Fall back to HuggingFace only when no local copy is available
         try:
             from datasets import load_dataset
             print("Loading PHANTOM dataset from HuggingFace (seyled/Phantom_Hallucination_Detection)...")
@@ -105,35 +130,8 @@ def load_test_dataset(path: str = None, use_phantom: bool = True, limit: int = N
                 'format': 'phantom'  # Flag to handle differently in benchmark
             }
         except Exception as e:
-            print(f"  Warning: Could not load from HuggingFace: {e}")
-            print("  Falling back to local phantom_compatible_dataset.json")
-            
-        # Fallback to local file
-        phantom_path = 'data/phantom/phantom_compatible_dataset.json'
-        if Path(phantom_path).exists():
-            print("Loading local PHANTOM-compatible dataset...")
-            with open(phantom_path, 'r') as f:
-                phantom_data = json.load(f)
-            examples = [
-                {
-                    'id': entry['id'],
-                    'question': entry['question'],
-                    'company': entry['company'],
-                    'domain': entry.get('domain', 'financial'),
-                    'grounded_response': entry['grounded']['response'],
-                    'hallucinated_response': entry['hallucinated']['response'],
-                    'hallucination_type': entry['hallucinated'].get('hallucination_type'),
-                    'difficulty': entry.get('difficulty')
-                }
-                for entry in phantom_data.get('data', [])
-            ]
-            if limit:
-                examples = examples[:limit]
-            return {
-                'metadata': phantom_data.get('metadata', {}),
-                'examples': examples
-            }
-    
+            print(f"  Warning: Could not load PHANTOM dataset: {e}")
+
     dataset_path = path or 'data/processed/hallucination_test_dataset.json'
     with open(dataset_path, 'r') as f:
         data = json.load(f)

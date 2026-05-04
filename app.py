@@ -42,39 +42,30 @@ def load_rag():
 
 @st.cache_resource
 def load_phantom_examples():
-    """Load examples from PHANTOM dataset with original context"""
+    """Load examples from local PHANTOM-compatible dataset"""
     try:
-        from datasets import load_dataset
-        import pandas as pd
+        print("Loading local dataset examples...")
+        dataset_path = Path(__file__).parent / 'data' / 'phantom' / 'phantom_compatible_dataset.json'
         
-        print("Loading PHANTOM dataset examples...")
-        phantom = load_dataset('seyled/Phantom_Hallucination_Detection',
-                               data_files='PhantomDataset/Phantom_10k_seed.csv')
-        df = phantom['train'].to_pandas()
-        
-        # PHANTOM has natural pairs: same query/context, different answers with different labels
-        # Find queries with both hallucinated and grounded answers
-        query_counts = df.groupby('query').size()
-        paired_queries = query_counts[query_counts == 2].index[:5]  # Get first 5 paired queries
+        with open(dataset_path, 'r') as f:
+            dataset = json.load(f)
         
         examples = {}
-        for i, query in enumerate(paired_queries):
-            pair_rows = df[df['query'] == query]
-            
-            grounded_row = pair_rows[pair_rows['ground_truth_label'] == 'not hallucination'].iloc[0]
-            hallucinated_row = pair_rows[pair_rows['ground_truth_label'] == 'hallucination'].iloc[0]
-            
-            example_name = f"Pair {i+1}"
+        # Take first 5 examples from the dataset
+        for i, item in enumerate(dataset['data'][:5]):
+            example_name = f"Example {i+1}: {item['company']}"
             examples[example_name] = {
-                "question": query,
-                "context": [grounded_row['context']],  # Both rows have same context
-                "grounded": grounded_row['answer'],
-                "hallucinated": hallucinated_row['answer']
+                "question": item['question'],
+                "context": [item.get('context', f"Retrieved context from {item['company']} {item['document_type']} filing")],
+                "grounded": item['grounded']['response'],
+                "hallucinated": item['hallucinated']['response']
             }
         
+        print(f"  Loaded {len(examples)} examples from local dataset")
         return examples, None
     except Exception as e:
-        # Fallback examples if PHANTOM fails to load
+        # Fallback examples if local dataset fails to load
+        print(f"  Error loading dataset: {e}")
         return {
             "Fallback": {
                 "question": "What was the company's revenue?",

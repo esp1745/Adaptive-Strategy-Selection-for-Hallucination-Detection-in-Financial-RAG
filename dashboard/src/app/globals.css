@@ -1,0 +1,373 @@
+@import "tailwindcss";
+
+:root {
+  /* ── Finance color palette ── */
+  --color-primary: #1a4fba;
+  --color-primary-light: #2563eb;
+  --color-primary-dark: #1239a0;
+  --color-navy: #0c1d33;
+  --color-slate: #4b5a6d;
+  --color-bg: #eef1f6;
+
+  --color-success: #15803d;
+  --color-warning: #b45309;
+  --color-error: #dc2626;
+  --color-info: #1a4fba;
+  --color-purple: #6d28d9;
+
+  /* Detector accent colors */
+  --color-token: #15803d;
+  --color-semantic: #1a4fba;
+  --color-bert: #b45309;
+  --color-llm: #7c3aed;
+
+  --background: var(--color-bg);
+  --foreground: var(--color-navy);
+
+  --radius-sm: 3px;
+  --radius-md: 5px;
+  --radius-lg: 8px;
+
+  --shadow-sm: 0 1px 2px rgba(12, 29, 51, 0.07);
+  --shadow-md: 0 3px 10px rgba(12, 29, 51, 0.10);
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: "Inter", "Segoe UI", "Helvetica Neue", sans-serif;
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: "Inter", "Segoe UI", "Helvetica Neue", sans-serif;
+}
+
+/* ── All numbers use tabular-nums ── */
+.tabular-nums {
+  font-variant-numeric: tabular-nums;
+}
+
+/* ── Cards ── */
+.card {
+  background: #ffffff;
+  border: 1px solid #dde3ec;
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm);
+  transition: box-shadow 0.15s ease;
+}
+
+.card:hover {
+  box-shadow: var(--shadow-md);
+}
+
+.card-accent {
+  border-left: 3px solid var(--color-primary);
+}
+
+/* ── Hero (dark navy) — combined selector beats .card's white bg ── */
+.hero-panel,
+.hero-panel.card {
+  background: linear-gradient(135deg, #0c1d33 0%, #152d4a 100%);
+  border: 1px solid #1e3555;
+}
+
+/* Hero metric tiles — frosted on dark bg */
+.hero-metric {
+  border: 1px solid rgba(255, 255, 255, 0.11);
+  background: rgba(255, 255, 255, 0.07);
+  border-radius: var(--radius-md);
+  padding: 12px 16px;
+}
+
+/* ── Stat surfaces (white cards sections) ── */
+.metric-surface {
+  border: 1px solid #dde3ec;
+  background: #ffffff;
+  border-radius: var(--radius-md);
+  padding: 12px 14px;
+  box-shadow: none;
+}
+
+/* ── Tab bar ── */
+.tab-bar {
+  position: sticky;
+  top: 12px;
+  z-index: 20;
+  background: rgba(255, 255, 255, 0.96);
+  border: 1px solid #dde3ec;
+  backdrop-filter: blur(8px);
+}
+
+.tab-button {
+  border-radius: var(--radius-md);
+  border: 1px solid transparent;
+  background: transparent;
+  padding: 8px 14px;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #4b5a6d;
+  letter-spacing: 0.01em;
+  transition: all 0.12s ease;
+}
+
+.tab-button:hover {
+  border-color: #dde3ec;
+  background: #f5f7fa;
+  color: #0c1d33;
+}
+
+.tab-button-active {
+  border-color: #1a4fba;
+  background: #eff4ff;
+  color: #1a4fba;
+  box-shadow: none;
+}
+
+/* ── Input ── */
+.input-query {
+  width: 100%;
+  min-height: 72px;
+  border: 1px solid #dde3ec;
+  border-radius: var(--radius-md);
+  padding: 12px 14px;
+  font-size: 15px;
+  background: #ffffff;
+  resize: vertical;
+}
+
+.input-query:focus {
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(26, 79, 186, 0.18);
+  border-color: var(--color-primary);
+}
+
+/* ── Primary button ── */
+.btn-primary {
+  background: var(--color-primary);
+  color: white;
+  padding: 10px 22px;
+  border-radius: var(--radius-md);
+  font-weight: 600;
+  font-size: 0.9rem;
+  letter-spacing: 0.02em;
+  transition: background 0.12s ease, transform 0.1s ease;
+}
+
+.btn-primary:hover {
+  background: var(--color-primary-dark);
+}
+
+.btn-primary:active {
+  transform: scale(0.98);
+}
+
+.focus-ring:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+}
+
+/* ── Signal chip ── */
+.signal-chip {
+  border-radius: var(--radius-sm);
+  border: 1px solid #dde3ec;
+  background: #f5f7fa;
+  padding: 5px 10px;
+  font-size: 0.82rem;
+  color: #334155;
+}
+
+/* ── Probability bars ── */
+.probability-track {
+  height: 6px;
+  overflow: hidden;
+  border-radius: 2px;
+  background: #e4eaf3;
+}
+
+/* ── Evidence cards ── */
+.evidence-card {
+  border-radius: var(--radius-lg);
+  border: 1px solid #dde3ec;
+  background: #ffffff;
+  padding: 16px 18px;
+}
+
+/* ── Verdict badges ── */
+.verdict-grounded {
+  background: #f0fdf4;
+  color: #15803d;
+  border: 1px solid #86efac;
+}
+
+.verdict-hallucinated {
+  background: #fef2f2;
+  color: #dc2626;
+  border: 1px solid #fca5a5;
+}
+
+/* ── Savings banner ── */
+.savings-banner {
+  background: linear-gradient(135deg, #15803d 0%, #16a34a 100%);
+  color: white;
+  border-radius: var(--radius-md);
+}
+
+/* ── Cost badges ── */
+.badge-cheap {
+  background: #f0fdf4;
+  color: #15803d;
+  border: 1px solid #bbf7d0;
+  border-radius: var(--radius-sm);
+  padding: 2px 7px;
+  font-size: 0.78rem;
+  font-weight: 600;
+}
+
+.badge-medium {
+  background: #fffbeb;
+  color: #b45309;
+  border: 1px solid #fde68a;
+  border-radius: var(--radius-sm);
+  padding: 2px 7px;
+  font-size: 0.78rem;
+  font-weight: 600;
+}
+
+.badge-expensive {
+  background: #fef2f2;
+  color: #dc2626;
+  border: 1px solid #fecaca;
+  border-radius: var(--radius-sm);
+  padding: 2px 7px;
+  font-size: 0.78rem;
+  font-weight: 600;
+}
+
+/* ── Verdict banners ── */
+.verdict-success-banner {
+  background: #f0fdf4;
+  border: 1px solid #86efac;
+  border-left: 4px solid #15803d;
+  border-radius: var(--radius-lg);
+  padding: 18px 22px;
+}
+
+.verdict-warning-banner {
+  background: #fffbeb;
+  border: 1px solid #fde68a;
+  border-left: 4px solid #b45309;
+  border-radius: var(--radius-lg);
+  padding: 18px 22px;
+}
+
+/* ── Answer text ── */
+.answer-text {
+  font-size: 1.02rem;
+  line-height: 1.9;
+  color: #0c1d33;
+}
+
+/* ── Pipeline steps ── */
+.pipeline-step {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+  border: 1px solid #e4eaf3;
+  border-radius: var(--radius-md);
+  background: #ffffff;
+  padding: 12px 14px;
+}
+
+.step-icon {
+  flex-shrink: 0;
+  width: 32px;
+  height: 32px;
+  border-radius: var(--radius-md);
+  background: #eff4ff;
+  color: var(--color-primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* ── Signal tags ── */
+.signal-tag {
+  display: inline-flex;
+  align-items: center;
+  border-radius: var(--radius-sm);
+  border: 1px solid #c7d7f7;
+  background: #eff4ff;
+  color: #1a4fba;
+  padding: 4px 10px;
+  font-size: 0.80rem;
+  font-weight: 500;
+  letter-spacing: 0.01em;
+}
+
+/* ── Grade letters ── */
+.grade-letter {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: var(--radius-md);
+  font-size: 1.05rem;
+  font-weight: 800;
+  flex-shrink: 0;
+}
+
+.grade-a {
+  background: #f0fdf4;
+  color: #15803d;
+  border: 1px solid #86efac;
+}
+
+.grade-b {
+  background: #eff4ff;
+  color: #1a4fba;
+  border: 1px solid #bfdbfe;
+}
+
+.grade-c {
+  background: #fffbeb;
+  color: #b45309;
+  border: 1px solid #fde68a;
+}
+
+.grade-d {
+  background: #fef2f2;
+  color: #dc2626;
+  border: 1px solid #fecaca;
+}
+
+/* ── Empty states ── */
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 56px 24px;
+  text-align: center;
+}
+
+.empty-state-icon {
+  color: #94a3b8;
+  margin-bottom: 4px;
+}
+
+/* ── Finance data tables ── */
+thead tr {
+  background: #f5f7fa;
+}
+
+thead th {
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: #6b7f97;
+}
